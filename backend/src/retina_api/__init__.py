@@ -1,2 +1,1 @@
-"""Retina model review backend package."""
-
+"""Dynamic diabetic retinopathy grading backend package."""

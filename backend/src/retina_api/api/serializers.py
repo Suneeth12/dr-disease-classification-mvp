@@ -30,8 +30,24 @@ def static_url_for_path(path: str | Path, *, root_dir: Path, mount_name: str) ->
     try:
         relative_path = path_obj.relative_to(root_dir)
     except ValueError:
-        relative_path = Path(path_obj.name)
+        root_name = root_dir.name.lower()
+        lowered_parts = [part.lower() for part in path_obj.parts]
+        if root_name in lowered_parts:
+            marker_index = len(lowered_parts) - 1 - lowered_parts[::-1].index(root_name)
+            relative_path = Path(*path_obj.parts[marker_index + 1 :])
+        else:
+            relative_path = Path(path_obj.name)
     return f"/{mount_name}/{relative_path.as_posix()}"
+
+
+def runtime_path_for_static_file(path: str | Path, *, root_dir: Path) -> Path:
+    path_obj = Path(path)
+    if path_obj.exists():
+        return path_obj
+    static_url = static_url_for_path(path_obj, root_dir=root_dir, mount_name=root_dir.name)
+    relative_path = Path(static_url.split("/", 2)[-1])
+    candidate_path = root_dir / relative_path
+    return candidate_path if candidate_path.exists() else path_obj
 
 
 def upload_url_for_path(path: str | Path, *, settings: Settings) -> str:
@@ -70,7 +86,8 @@ def serialize_gradcam_artifact(
     *,
     settings: Settings,
 ) -> GradcamArtifactEnvelope:
-    metadata = load_artifact_sidecar(image_path)
+    resolved_image_path = runtime_path_for_static_file(image_path, root_dir=settings.artifacts_dir)
+    metadata = load_artifact_sidecar(resolved_image_path)
 
     def optional_int(key: str) -> int | None:
         value = metadata.get(key)
@@ -84,7 +101,7 @@ def serialize_gradcam_artifact(
         model_name=model_name,
         display_name=str(metadata.get("display_name", display_name_for_model(model_name))),
         kind=str(metadata.get("kind", "gradcam")),
-        image_url=artifact_url_for_path(image_path, settings=settings),
+        image_url=artifact_url_for_path(resolved_image_path, settings=settings),
         target_layers=[str(value) for value in metadata.get("target_layers", [])],
         branch_weights=[float(value) for value in metadata.get("branch_weights", [])],
         predicted_class_index=int(metadata.get("predicted_class_index", 0)),
@@ -157,6 +174,7 @@ def build_case_detail_response(
     settings: Settings,
     db: Session,
 ) -> CaseDetailResponse:
+    source_image_path = runtime_path_for_static_file(case.source_image_path, root_dir=settings.uploads_dir)
     artifacts = db.query(Artifact).filter(Artifact.prediction_id == prediction.id).all()
     response_artifacts = [
         serialize_gradcam_artifact(artifact.gradcam_image_path, artifact.model_name, settings=settings)
@@ -193,7 +211,7 @@ def build_case_detail_response(
             "eye_side": case.eye_side,
             "visit_date": case.visit_date,
             "notes": case.notes,
-            "source_image_path": case.source_image_path,
+            "source_image_path": str(source_image_path),
         },
         prediction=build_prediction_envelope(
             predicted_class_index=prediction.predicted_class_index,
@@ -207,7 +225,7 @@ def build_case_detail_response(
             ereg_graph=ereg_graph,
             gradcam_artifacts=response_artifacts,
         ),
-        original_image_url=upload_url_for_path(case.source_image_path, settings=settings),
+        original_image_url=upload_url_for_path(source_image_path, settings=settings),
     )
 
 

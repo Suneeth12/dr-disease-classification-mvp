@@ -16,6 +16,7 @@ from retina_api.api.serializers import (
     artifact_payloads_to_models,
     build_case_detail_response,
     build_prediction_envelope,
+    runtime_path_for_static_file,
     serialize_gradcam_artifact,
     upload_url_for_path,
 )
@@ -163,8 +164,12 @@ def generate_case_explainability(
     )
     if existing_artifact_count == 0:
         runtime = runtime_or_503(request)
+        source_image_path = runtime_path_for_static_file(
+            case.source_image_path,
+            root_dir=request.app.state.settings.uploads_dir,
+        )
         try:
-            explainability_payload = request.app.state.explainability_runner(case.source_image_path, runtime)
+            explainability_payload = request.app.state.explainability_runner(source_image_path, runtime)
         except ValueError as exc:
             raise HTTPException(status_code=400, detail=str(exc)) from exc
 

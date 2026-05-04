@@ -1,6 +1,6 @@
-# Retina Model Review
+# Dynamic DR Grading
 
-Retina Model Review is a diabetic retinopathy review app with:
+Dynamic DR Grading is a diabetic retinopathy review app with:
 
 - a FastAPI backend for model loading, inference, case history, and Grad-CAM artifacts;
 - a React/Vite frontend for uploading retinal images and reviewing results;
@@ -37,13 +37,13 @@ If you cloned from GitHub:
 
 ```powershell
 git clone <your-repo-url>
-cd retina-model-review
+cd <project-folder>
 ```
 
 If you are using an already-downloaded project folder, open PowerShell in that folder:
 
 ```powershell
-cd retina-model-review
+cd <project-folder>
 ```
 
 ## 3. Download Runtime Model Files

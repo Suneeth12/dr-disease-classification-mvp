@@ -24,7 +24,7 @@ function App() {
             DR
           </div>
           <div>
-            <p className="brand-title app-brand__title">Retina Model Review</p>
+            <p className="brand-title app-brand__title">Dynamic DR Grading</p>
             <p className="brand-subtitle app-brand__subtitle">Classification, E-REG graph, and Grad-CAM</p>
           </div>
         </div>

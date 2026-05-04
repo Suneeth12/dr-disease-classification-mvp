@@ -9,6 +9,7 @@ from sqlalchemy.orm import sessionmaker
 from sqlalchemy.pool import StaticPool
 
 from retina_api.api.dependencies import get_db
+from retina_api.api.serializers import artifact_url_for_path, runtime_path_for_static_file, upload_url_for_path
 from retina_api.app import create_app
 from retina_api.core.settings import Settings
 from retina_api.db.models import Artifact, Base, Case, Prediction
@@ -83,6 +84,26 @@ def build_test_image_bytes() -> bytes:
     ok, encoded = cv2.imencode(".png", cv2.cvtColor(image, cv2.COLOR_RGB2BGR))
     assert ok
     return encoded.tobytes()
+
+
+def test_static_urls_preserve_runtime_relative_path_after_project_rename(tmp_path: Path) -> None:
+    settings = build_test_settings(tmp_path)
+    legacy_upload_path = Path("old-project") / "runtime" / "data" / "uploads" / "case-image.png"
+    legacy_artifact_path = (
+        Path("old-project")
+        / "runtime"
+        / "data"
+        / "artifacts"
+        / "case-id"
+        / "multiscale.png"
+    )
+
+    assert upload_url_for_path(legacy_upload_path, settings=settings) == "/uploads/case-image.png"
+    assert artifact_url_for_path(legacy_artifact_path, settings=settings) == "/artifacts/case-id/multiscale.png"
+
+    current_upload_path = settings.uploads_dir / "case-image.png"
+    current_upload_path.write_bytes(b"image")
+    assert runtime_path_for_static_file(legacy_upload_path, root_dir=settings.uploads_dir) == current_upload_path
 
 
 def test_health_endpoint_returns_readiness_payload(tmp_path: Path) -> None:
