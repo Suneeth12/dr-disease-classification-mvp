@@ -1,0 +1,82 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+pytest-cache-files-*/
+.test-tmp/
+.compile-cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+coverage.xml
+htmlcov/
+.pydeps/
+*.egg-info/
+
+# Python virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Node / frontend builds
+node_modules/
+dist/
+build/
+.vite/
+coverage/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data and model artifacts
+runtime/models/
+runtime/data/
+runtime/uploads/
+runtime/artifacts/
+runtime/app.db
+runtime/*.db
+runtime/**/*.db
+runtime/notebook-artifacts/*
+!runtime/notebook-artifacts/ensemble/
+runtime/notebook-artifacts/ensemble/*
+!runtime/notebook-artifacts/ensemble/final_ensemble_recipe.json
+!runtime/notebook-artifacts/thresholds/
+runtime/notebook-artifacts/thresholds/*
+!runtime/notebook-artifacts/thresholds/*_thresholds.json
+*.keras
+*.h5
+
+# Optional local helper scripts
+backend/scripts/
+
+# Archives and heavy bundles
+*.zip
+*.7z
+*.rar
+*.tar
+*.tar.gz
+*.tgz
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+*.temp
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~

@@ -1,0 +1,100 @@
+{
+  "schema_version": 1,
+  "selection": "validation_only_ereg_dynamic_recipe",
+  "model_names": [
+    "attention",
+    "patch_mil",
+    "lesion",
+    "multiscale"
+  ],
+  "fusion_method": "ereg_dynamic_logit_fusion",
+  "reliability_power": 0.5,
+  "confidence_power": 0.0,
+  "agreement_power": 0.0,
+  "threshold_vector": [
+    0.6899999976158142,
+    1.1699999570846558,
+    2.8299999237060547,
+    3.549999952316284
+  ],
+  "member_mean_weights_on_validation": [
+    0.2531820237636566,
+    0.25214192271232605,
+    0.2515328824520111,
+    0.24314317107200623
+  ],
+  "validation_metrics": {
+    "loss": 0.2696520984172821,
+    "accuracy": 0.9503676470588235,
+    "qwk": 0.9696003212166494,
+    "macro_f1": 0.9169908649093863,
+    "research_score": 0.9511870115091072
+  },
+  "frozen_test_metrics": {
+    "loss": 0.23889881372451782,
+    "accuracy": 0.9444444444444444,
+    "qwk": 0.9672844319627582,
+    "macro_f1": 0.9113947609265549,
+    "research_score": 0.947723047100087
+  },
+  "candidate_model_pool": [
+    "attention",
+    "multiscale",
+    "lesion",
+    "patch_mil"
+  ],
+  "candidate_model_sets_evaluated": [
+    [
+      "attention",
+      "patch_mil"
+    ],
+    [
+      "attention",
+      "lesion"
+    ],
+    [
+      "attention",
+      "multiscale"
+    ],
+    [
+      "patch_mil",
+      "lesion"
+    ],
+    [
+      "patch_mil",
+      "multiscale"
+    ],
+    [
+      "lesion",
+      "multiscale"
+    ],
+    [
+      "attention",
+      "patch_mil",
+      "lesion"
+    ],
+    [
+      "attention",
+      "patch_mil",
+      "multiscale"
+    ],
+    [
+      "attention",
+      "lesion",
+      "multiscale"
+    ],
+    [
+      "patch_mil",
+      "lesion",
+      "multiscale"
+    ],
+    [
+      "attention",
+      "patch_mil",
+      "lesion",
+      "multiscale"
+    ]
+  ],
+  "threshold_grid_size": 14,
+  "leakage_control": "Recipe selected using validation labels only; test split used once after freezing the recipe."
+}
