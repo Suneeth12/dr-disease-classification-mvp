@@ -6,11 +6,14 @@ This folder holds local runtime data, trained model weights, uploaded images, an
 
 ## Model Weights Download
 
-Model weights (`.keras` files) are stored externally to keep the repository size manageable:
+Model weights (`.keras` files) are stored externally in `models.zip` (~1.2 GB) to keep the repository size manageable:
 
 **[Google Drive Model Weights](https://drive.google.com/drive/folders/1zDQ9y3y0kpvL0yF6yjFyp2ehWYZ1HL4e)**
 
-Download the files and place them into `runtime/models/`.
+### How to set up:
+1. Download `models.zip` from the Google Drive link.
+2. Unzip it directly into this `runtime/` folder.
+3. Keep the file structure intact so the `.keras` files reside inside `runtime/models/`.
 
 ---
 

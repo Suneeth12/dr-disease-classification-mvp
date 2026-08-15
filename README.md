@@ -28,11 +28,14 @@ py -0p
 
 ## 2. Download Model Weights
 
-Trained model weights (`.keras` files) are kept out of Git to keep the repository lightweight. Download the model files from Google Drive:
+Trained model weights (`.keras` files) are stored externally to keep the git repository lightweight. Download `models.zip` (~1.2 GB) from Google Drive:
 
 **[Google Drive Model Weights](https://drive.google.com/drive/folders/1zDQ9y3y0kpvL0yF6yjFyp2ehWYZ1HL4e)**
 
-Download the files and place them into `runtime/models/`:
+### Extraction Steps:
+1. Download `models.zip` from the Drive link above.
+2. Unzip `models.zip` directly into the `runtime/` directory.
+3. Keep the file structure intact so the `.keras` files are placed inside `runtime/models/`:
 
 ```text
 runtime/
@@ -43,16 +46,22 @@ runtime/
     └── patch_mil.keras
 ```
 
-> If your download contains `multibranch.keras`, you can leave it in `runtime/models/` as well. The active ensemble recipe primarily uses the four models listed above.
+> **PowerShell Unzip Example:**
+> ```powershell
+> # If models.zip is in your Downloads folder:
+> Expand-Archive -Path "$HOME\Downloads\models.zip" -DestinationPath runtime\ -Force
+> ```
 
-Create the required runtime folders if they do not exist:
+> If your downloaded bundle also contains `multibranch.keras`, leave it inside `runtime/models/`. The active E-REG recipe uses the four core models listed above.
+
+Create the remaining local runtime folders if they do not already exist:
 ```powershell
 New-Item -ItemType Directory -Force runtime\models
 New-Item -ItemType Directory -Force runtime\data\uploads
 New-Item -ItemType Directory -Force runtime\data\artifacts
 ```
 
-> **Note**: Do not touch `runtime/notebook-artifacts/`. The ensemble recipe (`final_ensemble_recipe.json`) and per-model threshold files are tracked in Git and already in place.
+> **Note**: Do not modify or replace `runtime/notebook-artifacts/`. The ensemble recipe (`final_ensemble_recipe.json`) and per-model threshold files are tracked in Git and already in place.
 
 ---
 
