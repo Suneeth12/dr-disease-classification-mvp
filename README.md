@@ -171,7 +171,54 @@ Retinal Fundus Image (.png/.jpg)
 
 ---
 
-## 6. Project Layout
+## 6. Experimental Results
+
+Evaluated on the APTOS 2019 Blindness Detection dataset under a split-safe protocol (70% train, 15% validation, 15% test; seed 42, 558 frozen test samples). All decision thresholds and ensemble recipes were tuned strictly on validation data before reporting frozen test metrics.
+
+### Model-Backed Test Set Performance
+
+| Model | Architecture Highlights | Accuracy | Precision | Recall | F1-Score | QWK |
+| --- | --- | --- | --- | --- | --- | --- |
+| **DB-AttnNet** | Dual-stream attention refinement | 91.58% | 0.8704 | 0.8482 | 0.9149 | 0.9472 |
+| **DB-MScaleNet** | Multi-scale dilated context fusion | 86.92% | 0.7937 | 0.7907 | 0.8658 | 0.9376 |
+| **DB-LesionNet** | Spatial lesion-focused gating | 90.14% | 0.8315 | 0.8618 | 0.9022 | 0.9545 |
+| **DB-PatchMIL** | 9-patch bag + gated attention pooling | 89.78% | 0.8130 | 0.8457 | 0.9000 | 0.9482 |
+| **E-REG Fusion** | **Dynamic 4-model reliability fusion** | **93.37%** | **0.9342** | **0.9337** | **0.9336** | **0.9602** |
+
+### Per-Class Performance (E-REG Fusion)
+
+| Grade | Clinical Category | Precision | Recall | F1-Score | Test Support |
+| --- | --- | --- | --- | --- | --- |
+| **0** | No DR | 0.9890 | 0.9926 | 0.9908 | 271 |
+| **1** | Mild DR | 0.8333 | 0.8475 | 0.8403 | 59 |
+| **2** | Moderate DR | 0.8896 | 0.9013 | 0.8954 | 152 |
+| **3** | Severe DR | 0.8611 | 0.8857 | 0.8732 | 35 |
+| **4** | Proliferative DR | 0.9444 | 0.8293 | 0.8831 | 41 |
+
+### Comparison with Published DR Baselines
+
+| Method / Study | Backbone / Approach | Accuracy | Precision | Recall | F1-Score |
+| --- | --- | --- | --- | --- | --- |
+| ViT-Large/32 *(Nazih et al., 2023)* | Vision Transformer | 80.40% | 0.8040 | 0.8040 | 0.8040 |
+| MSAmix-Net *(Gao et al., 2024)* | Multiscale Self-Attention | 82.30% | 0.7300 | 0.9270* | 0.8164 |
+| Hybrid Model *(Prakash & Vinoth, 2024)* | Feature-Level Fusion | 84.02% | 0.8312 | 0.8402 | 0.8291 |
+| **E-REG Fusion (Ours)** | **Dual-Backbone + Patch-MIL + E-REG** | **93.37%** | **0.9342** | **0.9337** | **0.9336** |
+
+*\*MSAmix-Net reported sensitivity on a merged dataset; table reflects published values mapped to comparable metric conventions.*
+
+### Test Split Confusion Matrix (558 Cases)
+
+| True \ Predicted | Grade 0 (No DR) | Grade 1 (Mild) | Grade 2 (Moderate) | Grade 3 (Severe) | Grade 4 (PDR) |
+| --- | --- | --- | --- | --- | --- |
+| **Grade 0 (No DR)** | **269** | 2 | 0 | 0 | 0 |
+| **Grade 1 (Mild)** | 1 | **50** | 8 | 0 | 0 |
+| **Grade 2 (Moderate)** | 2 | 7 | **137** | 4 | 2 |
+| **Grade 3 (Severe)** | 0 | 0 | 4 | **31** | 0 |
+| **Grade 4 (PDR)** | 0 | 1 | 5 | 1 | **34** |
+
+---
+
+## 7. Project Layout
 
 ```text
 dr-disease-classification-mvp/
@@ -202,7 +249,7 @@ dr-disease-classification-mvp/
 
 ---
 
-## 7. Testing & Verification
+## 8. Testing & Verification
 
 Run backend tests:
 ```powershell
@@ -219,7 +266,7 @@ npm run build
 
 ---
 
-## 8. API Endpoints
+## 9. API Endpoints
 
 | Method | Endpoint | Description |
 | --- | --- | --- |
@@ -231,7 +278,7 @@ npm run build
 
 ---
 
-## 9. Environment Variables
+## 10. Environment Variables
 
 Default paths resolve automatically relative to the repository root. You can customize them if needed:
 
@@ -246,7 +293,7 @@ Default paths resolve automatically relative to the repository root. You can cus
 
 ---
 
-## 10. Troubleshooting
+## 11. Troubleshooting
 
 - **`No matching distribution found for tensorflow==2.20.0`**: You are likely using Python 3.14. Recreate your virtual environment with Python 3.12 (`py -3.12 -m venv .venv`).
 - **`ModuleNotFoundError: No module named 'retina_api'`**: Make sure you ran `pip install --no-deps -e .` inside `backend/` so Python registers the local source package.
