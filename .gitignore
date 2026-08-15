@@ -77,6 +77,6 @@ Thumbs.db
 desktop.ini
 .idea/
 .vscode/
-*.swp
-*.swo
-*~
+# Code review graph
+.code-review-graph/*.db*
+.code-review-graph/cache/

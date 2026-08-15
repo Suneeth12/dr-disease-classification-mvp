@@ -1,51 +1,47 @@
 # Runtime Directory
 
-This directory is a local workspace for files needed or generated while running the app. Most contents are ignored by Git.
+This folder holds local runtime data, trained model weights, uploaded images, and generated Grad-CAM visualizations.
 
-Download the model ZIP from:
+---
 
-https://drive.google.com/drive/folders/1OsLOgkkSU_drRmFESKNo6d0V2WPbBGlZ?usp=sharing
+## Model Weights Download
 
-Recommended Drive layout:
+Model weights (`.keras` files) are stored externally to keep the repository size manageable:
 
-```text
-Google Drive folder/
-  retina-models.zip
-```
+**[Google Drive Model Weights](https://drive.google.com/drive/folders/1zDQ9y3y0kpvL0yF6yjFyp2ehWYZ1HL4e)**
 
-Best ZIP contents:
+Download the files and place them into `runtime/models/`.
 
-```text
-  models/
-```
+---
 
-If possible, keep this as a single ZIP in Drive so users can download it and unzip `models/` directly
-into this `runtime/` folder. The E-REG recipe and thresholds are tracked in GitHub and should not be
-part of the Drive ZIP.
-
-Expected local subdirectories:
-
-- `models/`: trained `.keras` model weights.
-- `notebook-artifacts/ensemble/`: tracked current E-REG `final_ensemble_recipe.json`.
-- `notebook-artifacts/thresholds/`: tracked current `*_thresholds.json` files.
-- `data/uploads/`: uploaded or sample images used during local runs.
-- `data/artifacts/`: generated review and explanation outputs.
-
-The local app database is expected at `runtime/data/app.db` when created. Keep this README tracked so the placeholder directory is visible in GitHub.
-
-Minimum runtime setup:
+## Directory Structure
 
 ```text
 runtime/
-  models/
-    attention.keras
-    lesion.keras
-    multiscale.keras
-    patch_mil.keras
-  notebook-artifacts/
-    ensemble/final_ensemble_recipe.json
-    thresholds/*_thresholds.json
+├── models/                               # Downloaded .keras weights (gitignored)
+│   ├── attention.keras
+│   ├── lesion.keras
+│   ├── multiscale.keras
+│   └── patch_mil.keras
+│
+├── notebook-artifacts/                   # Tracked in Git (do not delete)
+│   ├── ensemble/
+│   │   └── final_ensemble_recipe.json    # Active E-REG ensemble configuration
+│   └── thresholds/
+│       ├── attention_thresholds.json
+│       ├── lesion_thresholds.json
+│       ├── multiscale_thresholds.json
+│       └── patch_mil_thresholds.json
+│
+└── data/                                 # Generated at runtime (gitignored)
+    ├── uploads/                          # Temporary storage for uploaded scans
+    ├── artifacts/                        # Generated Grad-CAM overlay images
+    └── app.db                            # SQLite application database
 ```
 
-The recipe and threshold JSON files are already included with the repository. Download/copy only the
-heavy `.keras` model files from the shared artifact bundle before starting the backend.
+---
+
+## Quick Notes
+
+- The recipe and threshold JSON files in `notebook-artifacts/` are tracked in version control. You do not need to download or recreate them.
+- If you need to re-initialize your local database or clear generated artifacts, you can safely delete `data/app.db`, `data/uploads/*`, and `data/artifacts/*`. The backend will recreate them on the next run.
